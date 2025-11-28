@@ -1,68 +1,123 @@
-# INNOBUS - Intelligent Public Transport App
+# 🚌 INNOBUS - Aplicación Inteligente de Transporte Público
 
-INNOBUS is a comprehensive MVP for a public transport application featuring real-time tracking, route calculation, and a "Waze-like" navigation mode for bus users.
+INNOBUS es un MVP completo para una aplicación de transporte público que incluye seguimiento en tiempo real, cálculo de rutas y un modo de navegación tipo "Waze" para usuarios de autobuses.
 
-## Project Structure
+![GitHub](https://img.shields.io/github/license/CHURCHDEVS/INNOBUS)
+![GitHub stars](https://img.shields.io/github/stars/CHURCHDEVS/INNOBUS)
+![GitHub forks](https://img.shields.io/github/forks/CHURCHDEVS/INNOBUS)
 
-The project is organized as a Monorepo:
+## 📋 Tabla de Contenidos
 
-*   `backend/`: FastAPI (Python) backend service.
-*   `mobile/`: Flutter (Dart) mobile application.
-*   `web/`: React + Vite web application.
-*   `admin/`: React + Vite admin panel.
-*   `database/`: PostgreSQL + PostGIS initialization scripts.
-*   `scripts/`: Utility scripts for data simulation.
+- [Características Principales](#-características-principales)
+- [Estructura del Proyecto](#-estructura-del-proyecto)
+- [Requisitos Previos](#-requisitos-previos)
+- [Instalación y Configuración](#-instalación-y-configuración)
+- [Arquitectura](#-arquitectura)
+- [Documentación de la API](#-documentación-de-la-api)
+- [Contribuir](#-contribuir)
+- [Licencia](#-licencia)
 
-## Prerequisites
+## ✨ Características Principales
 
-*   Docker & Docker Compose
-*   Node.js (for Web/Admin)
-*   Flutter SDK (for Mobile)
-*   Python 3.10+ (for local backend dev)
+### 🗺️ Enrutamiento Inteligente
+Calcula rutas óptimas combinando segmentos de caminata y autobús, utilizando algoritmos avanzados de optimización.
 
-## Getting Started
+### 🚦 Modo Waze
+- Detecta automáticamente cuando estás en el autobús (Snap-to-route)
+- Te notifica 3 minutos antes de tu parada
+- Seguimiento en tiempo real de tu progreso
 
-### 1. Start Infrastructure (Database & Backend)
+### 📍 Seguimiento en Tiempo Real
+Visualiza las posiciones de los autobuses y el progreso del usuario en tiempo real.
+
+### 👨‍💼 Panel de Administración
+Gestiona rutas, paradas y visualiza análisis detallados del sistema.
+
+## 📁 Estructura del Proyecto
+
+El proyecto está organizado como un **Monorepo**:
+
+```
+innobus/
+├── backend/          # Servicio backend con FastAPI (Python)
+├── mobile/           # Aplicación móvil con Flutter (Dart)
+├── web/              # Aplicación web con React + Vite
+├── admin/            # Panel de administración con React + Vite
+├── database/         # Scripts de inicialización PostgreSQL + PostGIS
+├── scripts/          # Scripts de utilidad para simulación de datos
+└── docker-compose.yml
+```
+
+## 🔧 Requisitos Previos
+
+Asegúrate de tener instalado lo siguiente:
+
+- **Docker & Docker Compose** - Para contenedores
+- **Node.js** (v16+) - Para Web/Admin
+- **Flutter SDK** (v3.0+) - Para la aplicación móvil
+- **Python 3.10+** - Para desarrollo local del backend
+
+## 🚀 Instalación y Configuración
+
+### Opción 1: Inicio Rápido (Windows)
+
+Ejecuta el script de inicio automático:
+
+```bash
+start_dev.bat
+```
+
+Este script iniciará automáticamente:
+- Base de datos (PostgreSQL + PostGIS)
+- Backend (FastAPI)
+- Aplicación Web
+- Panel de Administración
+
+### Opción 2: Inicio Manual
+
+#### 1️⃣ Iniciar Infraestructura (Base de Datos & Backend)
 
 ```bash
 docker-compose up --build
 ```
 
-This will start:
-*   **Database**: PostgreSQL + PostGIS on port 5432.
-*   **Backend**: FastAPI on port 8000 (http://localhost:8000).
+Esto iniciará:
+- **Base de Datos**: PostgreSQL + PostGIS en el puerto `5432`
+- **Backend**: FastAPI en el puerto `8000` ([http://localhost:8000](http://localhost:8000))
 
-### 2. Populate Mock Data
+#### 2️⃣ Poblar Datos de Prueba
 
-Once the database is running, run the simulation script to populate stops, routes, and trips:
+Una vez que la base de datos esté en funcionamiento, ejecuta el script de simulación para poblar paradas, rutas y viajes:
 
 ```bash
-# Install dependencies
+# Instalar dependencias
 pip install psycopg2-binary
 
-# Run script
+# Ejecutar script
 python scripts/simulate_data.py
 ```
 
-### 3. Run Web App
+#### 3️⃣ Ejecutar Aplicación Web
 
 ```bash
 cd web
 npm install
 npm run dev
 ```
-Access at: http://localhost:3000
 
-### 4. Run Admin Panel
+**Acceso**: [http://localhost:3000](http://localhost:3000)
+
+#### 4️⃣ Ejecutar Panel de Administración
 
 ```bash
 cd admin
 npm install
 npm run dev
 ```
-Access at: http://localhost:3001
 
-### 5. Run Mobile App
+**Acceso**: [http://localhost:3001](http://localhost:3001)
+
+#### 5️⃣ Ejecutar Aplicación Móvil
 
 ```bash
 cd mobile
@@ -70,19 +125,70 @@ flutter pub get
 flutter run
 ```
 
-## Key Features
+## 🏗️ Arquitectura
 
-*   **Smart Routing**: Calculates optimal routes combining walking and bus segments.
-*   **Waze Mode**: Detects when you are on the bus (Snap-to-route) and notifies you 3 minutes before your stop.
-*   **Real-time Tracking**: Visualizes bus positions and user progress.
-*   **Admin Dashboard**: Manage routes, stops, and view analytics.
+### Backend
+- **Patrón**: Arquitectura Hexagonal (Ports & Adapters)
+- **Framework**: FastAPI
+- **Base de Datos**: PostgreSQL con extensión PostGIS
 
-## Architecture
+### Base de Datos
+- Consultas espaciales usando PostGIS
+- Funciones: `ST_Distance`, `ST_ClosestPoint`, `ST_MakeLine`
+- Optimización con índices espaciales
 
-*   **Backend**: Hexagonal Architecture.
-*   **Database**: Spatial queries using PostGIS (`ST_Distance`, `ST_ClosestPoint`).
-*   **Mobile**: Riverpod for state management, `flutter_map` for OSM integration.
+### Mobile
+- **State Management**: Riverpod
+- **Mapas**: `flutter_map` con integración OSM
+- **Geolocalización**: `geolocator`
 
-## API Documentation
+### Web & Admin
+- **Framework**: React 18
+- **Build Tool**: Vite
+- **Estilos**: TailwindCSS
+- **Mapas**: Leaflet + React-Leaflet
 
-Once the backend is running, visit: http://localhost:8000/docs
+## 📚 Documentación de la API
+
+Una vez que el backend esté en funcionamiento, visita la documentación interactiva de Swagger:
+
+**[http://localhost:8000/docs](http://localhost:8000/docs)**
+
+### Endpoints Principales
+
+#### Rutas
+- `POST /api/routing/calculate` - Calcular ruta óptima
+- `GET /api/routing/routes` - Obtener todas las rutas
+
+#### Seguimiento
+- `GET /api/tracking/buses/{route_id}` - Obtener posiciones de autobuses
+- `POST /api/tracking/snap-to-route` - Detectar si el usuario está en un autobús
+
+## 🤝 Contribuir
+
+¡Las contribuciones son bienvenidas! Por favor, sigue estos pasos:
+
+1. Haz un Fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+
+## 👥 Autores
+
+- **CHURCHDEVS** - [GitHub](https://github.com/CHURCHDEVS)
+
+## 🙏 Agradecimientos
+
+- OpenStreetMap por los datos de mapas
+- Comunidad de FastAPI
+- Comunidad de Flutter
+- Comunidad de React
+
+---
+
+**⭐ Si este proyecto te resultó útil, considera darle una estrella en GitHub!**
